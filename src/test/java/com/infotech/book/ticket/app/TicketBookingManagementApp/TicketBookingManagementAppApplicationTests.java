@@ -1,6 +1,7 @@
 package com.infotech.book.ticket.app.TicketBookingManagementApp;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +17,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.infotech.book.ticket.app.controller.TicketBookingController;
 import com.infotech.book.ticket.app.entities.Ticket;
 import com.infotech.book.ticket.app.service.TicketBookingService;
@@ -41,6 +44,13 @@ public class TicketBookingManagementAppApplicationTests {
 				"/api/tickets").accept(MediaType.APPLICATION_JSON);
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 		System.out.println(result.getResponse().getContentAsString());
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String jsonArray = "[{\"ticketId\":100,\"passengerName\":\"Viraj\",\"bookingDate\":null,\"sourceStation\":null,\"destStation\":null,\"email\":\"abc@gmail.com\"}]";
+		List<Ticket> tickets = objectMapper.readValue(jsonArray, new TypeReference<List<Ticket>>(){});
+		org.junit.Assert.assertEquals(tickets.size(), 1);
+		org.junit.Assert.assertTrue(tickets.get(0).getTicketId()==100);
+		
 //		byte response[] = new byte[1000];
 //		result.getResponse().getOutputStream().write(response);
 //		Arrays.toString(response);
